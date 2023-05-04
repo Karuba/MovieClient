@@ -1,0 +1,7 @@
+.movie-tile{
+   display:block;
+   min-height: 100px;
+   min-width: 100px;
+   padding: 5px;
+   margin: 5px;
+}
