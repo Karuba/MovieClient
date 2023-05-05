@@ -1,4 +1,4 @@
-import { Breadcrumb, Layout, Menu, theme, Affix } from 'antd';
+import { Breadcrumb, Layout, Menu, theme, Affix, Popover, Button } from 'antd';
 import { Link } from "react-router-dom";
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
@@ -6,46 +6,47 @@ import './appLayout.css'
 import { userLogout, avatarDownload } from '../redux/reducers/authSlice'
 
 import AppContent from './content/appContent'
-/* import { menuItem } from './content/userMenu' */
+import { UserMenu } from './content/userMenu'
 import { DARK_COLOR, LIGHT_COLOR, NIGHT_COLOR } from '../common/designConst';
-import logo from '../assets/camera.svg'
-
+import logo1 from '../assets/camera.svg'
+import logo2 from '../assets/Premium Cinema.svg'
 const { Header, Footer } = Layout;
 
 const AppLayout = () => {
-   /* const { userInfo, avatar } = useSelector((state) => state.auth)
+   const { userInfo, avatar } = useSelector((state) => state.auth)
    const dispatch = useDispatch();
 
-   useEffect(() => {
+   /* useEffect(() => {
       userInfo && dispatch(avatarDownload({ id: userInfo.id }));
-   }, [userInfo]);
+   }, [userInfo]); */
 
    const logoutHandler = () => {
       dispatch(userLogout());
-   } */
+   }
    return (
       <Layout style={{ minHeight: "100vh" }}>
          <Affix>
             <Header className="header" style={{ backgroundColor: NIGHT_COLOR, }}>
-               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <div className="pulsating-circle" style={{ height: 50 }}>
+               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", height: 64 }}>
+                  <div className="logo-box" style={{ height: 45 }}>
                      <Link to="/" style={{ padding: 0, margin: 0, height: 0, width: 0 }}>
-                        <img src={logo} style={{ height: 50 }} alt='logo' />
+                        <img src={logo1} style={{ height: 40, marginRight: 10 }} alt='logo' />
+                        <img src={logo2} style={{ height: 40 }} alt='logo' />
                      </Link>
                   </div>
                   <div>
                   </div>
                   {/* <Menu
                      style={{
-                        verticalAlign: 'middle',
+                        verticalAlign: 'center',
                         color: LIGHT_COLOR,
                         backgroundColor: NIGHT_COLOR,
-                        marginBottom: 35
                      }}
                      selectable={false}
                      mode="vertical"
                      items={menuItem(userInfo, logoutHandler, avatar)}
                   /> */}
+                  <UserMenu userInfo={userInfo} logoutHandler={logoutHandler} avatar={avatar} />
                </div>
             </Header>
          </Affix>
