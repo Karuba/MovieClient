@@ -10,14 +10,13 @@ import Tile from './components/tile';
 const Movies = () => {
 
    const dispatch = useDispatch();
-   const { error, loading, success, [MOVIES]: movies, pageParams } = useSelector(state => state[MOVIES])
+   const { error, loading, success, [MOVIES]: movies, pagination } = useSelector(state => state[MOVIES])
 
    const getMovies = () => {
-      dispatch(fetchMovies(pageParams))
+      dispatch(fetchMovies(pagination))
    }
 
    useEffect(() => {
-      console.log('Movies');
       getMovies();
    }, [])
 

@@ -14,9 +14,10 @@ export const UserMenu = ({ userInfo, logoutHandler, avatar }) => {
    const profile =
       <Link key="profile" to='/profile' style={{ color: "black" }} ><UserOutlined />  profile</Link>
 
-   const adminPanel = {
-      label: <Link to='/admin' ><UserAddOutlined />  admin panel</Link>
-   }
+   const adminPanel = (
+      <Link key="admin" to='/admin' style={{ color: "black" }} ><UserAddOutlined />  admin panel</Link>
+   )
+
    const logout = (logoutHandler) => (
       <Popconfirm key="logout" title="Are you sure to logout?" onConfirm={logoutHandler}>
          <Button danger key="logout" type="link" size='small' style={{ height: "100%", width: "100%", textAlign: "left", padding: 0 }}><LogoutOutlined />  logout</Button>
