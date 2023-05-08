@@ -1,6 +1,6 @@
 import { Button, Modal, Form, Input } from 'antd';
-import { FileAddOutlined, SaveOutlined } from '@ant-design/icons'
-import { useState } from 'react';
+import { SaveOutlined, EditOutlined } from '@ant-design/icons'
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { STARRING } from '../../../redux/entitiesConst';
 import {
@@ -9,11 +9,18 @@ import {
    descriptionAutoSize,
    validateDescription
 } from '../../../redux/contracts/starringContracts';
-import { createStar, fetchStarring } from '../../../redux/reducers/starringSlice';
+import { editStar, fetchStarring } from '../../../redux/reducers/starringSlice';
 
-const CreateStarring = () => {
+const EditStarring = ({ record }) => {
+
+   const [form] = Form.useForm();
+   useEffect(() => {
+      form.setFieldsValue(record);
+   }, [record]);
+
+
    const dispatch = useDispatch();
-   const { error, createLoading, pagination } = useSelector(state => state[STARRING])
+   const { error, editLoading, pagination } = useSelector(state => state[STARRING])
 
    const [open, setOpen] = useState(false);
 
@@ -24,10 +31,11 @@ const CreateStarring = () => {
 
    const handleSubmit = async (values) => {
       const newStar = {
-         ...values
+         ...values,
+         id: record.id
       }
 
-      await dispatch(createStar(newStar));
+      await dispatch(editStar(newStar));
       setOpen(false);
       dispatch(fetchStarring(pagination));
    };
@@ -37,14 +45,14 @@ const CreateStarring = () => {
 
    return (
       <>
-         <Button onClick={showModal}>
-            <FileAddOutlined /> create a new star
+         <Button type='link' onClick={showModal}>
+            <EditOutlined />
          </Button>
          <Modal
-            title="Create a star"
+            title="Edit a star"
             open={open}
             onOk={handleSubmit}
-            confirmLoading={createLoading}
+            confirmLoading={editLoading}
             onCancel={handleCancel}
             footer={
                <>
@@ -54,6 +62,7 @@ const CreateStarring = () => {
             maskClosable={false}
          >
             <Form
+               form={form}
                autoComplete="off"
                labelCol={{ span: 6 }}
                onFinish={(values => {
@@ -80,11 +89,11 @@ const CreateStarring = () => {
                   />
                </Form.Item>
                <Form.Item style={{ display: "flex", justifyContent: "right" }}>
-                  <Button htmlType='submit' loading={createLoading}><SaveOutlined /> save book</Button>
+                  <Button htmlType='submit' loading={editLoading}><SaveOutlined /> save book</Button>
                </Form.Item>
             </Form>
          </Modal>
       </>
    );
 };
-export default CreateStarring;
+export default EditStarring;

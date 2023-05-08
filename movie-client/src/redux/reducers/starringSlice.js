@@ -3,6 +3,13 @@ import { createRequest } from '../../common/requestGenerator';
 import * as axios from "../../lib/actionAxiosTypes";
 import { STARRING } from "../entitiesConst"
 
+const defaultPagination = {
+   pageNumber: 1,
+   pageSize: 5,
+   firstName: "",
+   secondName: "",
+}
+
 const initialState = {
    [STARRING]: [],
    success: null,
@@ -10,12 +17,13 @@ const initialState = {
    loading: null,
    deleteLoading: null,
    createLoading: null,
+   editLoading: null,
    totalStarring: null,
+   defaultPagination: {
+      ...defaultPagination
+   },
    pagination: {
-      pageNumber: 1,
-      pageSize: 5,
-      firstName: "",
-      secondName: "",
+      ...defaultPagination
    }
 }
 
@@ -62,6 +70,23 @@ export const createStar = createAsyncThunk(
       try {
          await createRequest({
             method: axios.POST, url: axios.PATH_POST_STAR,
+            body: {
+               ...newStar
+            }
+         })
+
+      } catch (error) {
+         return rejectWithValue(error.message);
+      }
+   }
+);
+
+export const editStar = createAsyncThunk(
+   `${STARRING}/editStar`,
+   async function (newStar, { rejectWithValue }) {
+      try {
+         await createRequest({
+            method: axios.PUT, url: axios.PATH_PUT_STAR({ id: newStar.id }),
             body: {
                ...newStar
             }
@@ -120,6 +145,17 @@ const starringSlice = createSlice({
       },
       [createStar.rejected]: (state, { payload }) => {
          state.createLoading = false;
+         state.error = payload;
+      },
+      [editStar.pending]: (state) => {
+         state.editLoading = true;
+         state.error = null;
+      },
+      [editStar.fulfilled]: (state) => {
+         state.editLoading = false;
+      },
+      [editStar.rejected]: (state, { payload }) => {
+         state.editLoading = false;
          state.error = payload;
       },
    }

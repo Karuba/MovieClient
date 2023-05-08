@@ -1,6 +1,6 @@
 export const noWhiteSpace = {
    validator: (_, value) =>
-      !value?.includes(" ")
+      !value?.includes("  ")
          ? Promise.resolve()
          : Promise.reject(new Error("Удалите пробелы"))
 }
@@ -32,6 +32,11 @@ export const validateDescription =
       },
       noWhiteSpace
    ]
+
+export const descriptionAutoSize = {
+   minRows: 3,
+   maxRows: 10,
+}
 
 //POSTER:
 export const uploadImgValidator = (setFinish) => [

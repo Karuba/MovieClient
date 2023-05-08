@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import Table from '../common/table/table'
 import { DeleteOutlined } from '@ant-design/icons'
 import CreateStarring from './actions/createStarring';
+import EditStarring from './actions/editStarring';
 /* import CreateMovie from './actions/createMovie'; */
 
 
@@ -47,10 +48,10 @@ const StarringTable = () => {
 
    const actionRender = (_, record) =>
       <Space size={0}>
-         <div style={{ width: "30px" }}>
-            {/* <EditTopic record={record} getTopics={getAllTopics} /> */}
+         <div style={{ width: "50px" }}>
+            <EditStarring record={record} />
          </div>
-         <div style={{ width: "100px" }}>
+         <div style={{ width: "50px" }}>
             <Space size={0}>
                <Popconfirm
                   title="Are you sure?"
@@ -81,7 +82,7 @@ const StarringTable = () => {
                totalEntities={totalStarring}
                hiddenColumns={hiddenColumns}
                loading={loading}
-               nameRefColumn={true}
+               nameRefColumn={false}
                changePageNumber={changePageNumber}
                actionRender={actionRender}
                extractEntities={getStarring}

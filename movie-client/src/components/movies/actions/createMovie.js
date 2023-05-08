@@ -1,22 +1,43 @@
-import { Button, Modal, Form, Input, AutoComplete, Upload } from 'antd';
-import { FileAddOutlined, SaveOutlined } from '@ant-design/icons'
+import { Button, Modal, Form, Input, AutoComplete, Upload, Space, Tag } from 'antd';
+import { FileAddOutlined, SaveOutlined, PlusOutlined } from '@ant-design/icons'
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { AUTH, MOVIES } from '../../../redux/entitiesConst';
-import { movieNameValidation, uploadCharacters, uploadImgValidator, validateDescription } from '../../../redux/contracts/movieContracts';
+import { MOVIES, STARRING } from '../../../redux/entitiesConst';
+import {
+   descriptionAutoSize,
+   movieNameValidation,
+   uploadCharacters,
+   uploadImgValidator,
+   validateDescription
+} from '../../../redux/contracts/movieContracts';
+import { fetchStarring } from '../../../redux/reducers/starringSlice';
 
 const CreateMovie = () => {
    const dispatch = useDispatch();
    const { error, createLoading } = useSelector(state => state[MOVIES])
-   /* const topics = useSelector(state => state.topics.topics) */
-   const { userInfo } = useSelector((state) => state[AUTH])
+   const { [STARRING]: starring, loading, defaultPagination } = useSelector(state => state[STARRING])
 
    const [open, setOpen] = useState(false);
+   const [data, setData] = useState([]);
+   const [form] = Form.useForm();
 
+   const addData = () => {
+      const field = form.getFieldValue("starring")
+      const star = field.split(' ')
+      console.log('star: ', star, "res: ", starring.find(s => s.firstName === star[0] && s.secondName === star[1]));
+      const add = starring.find(s => s.firstName === star[0] && s.secondName === star[1]);
+      console.log('add: ', add);
+      if (add)
+         setData([...data, add]);
+      console.log('data: ', data);
+
+      form.resetFields();
+   }
 
    const showModal = () => {
       setOpen(true);
-      /* dispatch(fetchTopics()); */
+      if (starring)
+         dispatch(fetchStarring(defaultPagination));
    };
 
    const handleSubmit = async (values) => {
@@ -59,6 +80,7 @@ const CreateMovie = () => {
             maskClosable={false}
          >
             <Form
+               form={form}
                autoComplete="off"
                labelCol={{ span: 6 }}
                onFinish={(values => {
@@ -75,34 +97,37 @@ const CreateMovie = () => {
                   rules={validateDescription}
                >
                   <Input.TextArea placeholder='enter the description'
-                     autoSize={{ minRows: 3, maxRows: 4 }}
+                     autoSize={descriptionAutoSize}
                   />
                </Form.Item>
 
-               {/* <Form.Item name="topic" label="Topic"
+               <Form.Item name="starring" label="Starring"
                   rules={[
-                     {
-                        required: true,
-                     },
                      {
                         validator(_, value) {
                            return new Promise((resolve, reject) => {
-                              topics.find((topic) => topic.name === value) ?
+                              starring.find((star) => star.firstName + " " + star.secondName === value) ?
                                  resolve("Success!") :
-                                 reject("The topic is not correct");
+                                 reject("The star is not correct");
                            })
                         }
                      }
                   ]}
                >
                   <AutoComplete
-                     options={topics.map((topic) => ({ value: topic.name }))}
+                     options={starring.map((star) => ({ value: star.firstName + " " + star.secondName }))}
                      placeholder="Please enter the topic"
                      filterOption={(inputValue, option) =>
                         option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
                      }
                   />
-               </Form.Item> */}
+               </Form.Item>
+               <div style={{ display: "flex", justifyContent: "right", justifyContent: "space-between" }}>
+                  <div style={{ display: "flex" }}>
+                     {data?.map(starring => <Tag color={"volcano"} key={starring.firstName + starring.secondName}>{starring.firstName + " " + starring.secondName}</Tag>)}
+                  </div>
+                  <Button type="link" onClick={addData} ><PlusOutlined /></Button>
+               </div>
 
                <Form.Item name="uploadFiles" label="Your File"
                   valuePropName='fileList'
@@ -124,7 +149,7 @@ const CreateMovie = () => {
                   </Upload>
                </Form.Item>
                <Form.Item style={{ display: "flex", justifyContent: "right" }}>
-                  <Button htmlType='submit' loading={createLoading}><SaveOutlined /> save book</Button>
+                  <Button htmlType='submit' loading={createLoading || loading}><SaveOutlined /> save book</Button>
                </Form.Item>
             </Form>
          </Modal>
