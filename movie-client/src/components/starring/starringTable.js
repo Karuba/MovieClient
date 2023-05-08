@@ -1,20 +1,21 @@
 import { Space, Button, Popconfirm, Tag } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchMovies, setPageNumber, deleteMovie } from '../../redux/reducers/movieSlice';
-import { MOVIES } from '../../redux/entitiesConst'
+import { fetchStarring, setPageNumber, deleteStarring } from '../../redux/reducers/starringSlice';
+import { STARRING } from '../../redux/entitiesConst'
 import { useEffect } from 'react';
 import Table from '../common/table/table'
 import { DeleteOutlined } from '@ant-design/icons'
-import CreateMovie from './actions/createMovie';
+import CreateStarring from './actions/createStarring';
+/* import CreateMovie from './actions/createMovie'; */
 
 
-const MovieTable = () => {
-   const { error, loading, [MOVIES]: movies, success, totalMovies, pagination, deleteLoading } = useSelector(state => state[MOVIES]);
+const StarringTable = () => {
+   const { error, loading, [STARRING]: starring, success, totalStarring, pagination, deleteLoading } = useSelector(state => state[STARRING]);
 
    const dispatch = useDispatch();
 
-   const getMovies = () => {
-      dispatch(fetchMovies(pagination));
+   const getStarring = () => {
+      dispatch(fetchStarring(pagination));
    }
 
    const changePageNumber = (page) => {
@@ -22,7 +23,7 @@ const MovieTable = () => {
    }
 
    useEffect(() => {
-      getMovies();
+      getStarring();
    }, [pagination])
 
    const hiddenColumns = [
@@ -30,8 +31,8 @@ const MovieTable = () => {
    ]
 
    const deleteHandler = async (record) => {
-      await dispatch(deleteMovie({ id: record.id }));
-      getMovies();
+      await dispatch(deleteStarring({ id: record.id }));
+      getStarring();
    }
 
    /* const enableHandler = async (record) => {
@@ -59,49 +60,35 @@ const MovieTable = () => {
                </Popconfirm>
             </Space>
          </div>
-
       </Space>
 
-   const arrayRender = (_, { starrings }) => (
-      <>
-         {starrings.map((starring) => {
-            let color = 'volcano';
-            return (
-               <Tag color={color} key={starring.firstName + starring.secondName}>
-                  {starring.firstName + " " + starring.secondName}
-               </Tag>
-            );
-         })}
-      </>
-   )
 
    return (
       <>
          <div>
-            <h2>Movies:</h2>
+            <h2>Starring:</h2>
             {error && <h3>{error}</h3>}
          </div>
          <div style={{ marginBottom: 10 }}>
-            <CreateMovie />
+            <CreateStarring />
          </div>
          {success &&
             <Table
                style={{
                   width: 1000
                }}
-               entities={movies}
-               totalEntities={totalMovies}
+               entities={starring}
+               totalEntities={totalStarring}
                hiddenColumns={hiddenColumns}
                loading={loading}
                nameRefColumn={true}
-               arrayRender={arrayRender}
                changePageNumber={changePageNumber}
                actionRender={actionRender}
-               extractEntities={getMovies}
+               extractEntities={getStarring}
                pagination={pagination}
             />}
       </>
    )
 }
 
-export default MovieTable;
+export default StarringTable;

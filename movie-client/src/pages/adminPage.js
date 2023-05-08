@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
 import { AUTH } from '../redux/entitiesConst'
 import MovieTable from '../components/movies/movieTable'
+import StarringTable from '../components/starring/starringTable'
 
 const AdminPage = () => {
 
@@ -18,6 +19,7 @@ const AdminPage = () => {
    return (
       <>
          <MovieTable />
+         <StarringTable />
       </>
    )
 }

@@ -9,7 +9,7 @@ const initialState = {
    error: null,
    loading: null,
    deleteLoading: null,
-   postLoading: null,
+   createLoading: null,
    totalMovies: null,
    pagination: {
       pageNumber: 1,

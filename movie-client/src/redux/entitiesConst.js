@@ -1,6 +1,7 @@
 //Entities
 export const MOVIES = "movies";
 export const AUTH = "auth";
+export const STARRING = "starring"
 
 //Roles
 export const ANONYM = "Anonym";

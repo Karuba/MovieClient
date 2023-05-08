@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import './table.css'
 
 const EntitiesTable = ({
+   style,
    entities,
    totalEntities,
    nameRefColumn = false,
@@ -73,6 +74,7 @@ const EntitiesTable = ({
 
    return (
       <Table
+         style={style}
          dataSource={dataSource}
          columns={!!entities && entities?.length != 0 && columns(Object.entries(entities[0]))}
          loading={loading}
