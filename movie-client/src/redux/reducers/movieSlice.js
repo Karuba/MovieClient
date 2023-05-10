@@ -10,6 +10,7 @@ const initialState = {
    loading: null,
    deleteLoading: null,
    createLoading: null,
+   createSuccess: null,
    totalMovies: null,
    pagination: {
       pageNumber: 1,
@@ -55,6 +56,21 @@ export const deleteMovie = createAsyncThunk(
    }
 );
 
+export const createMovie = createAsyncThunk(
+   `${MOVIES}/createMovie`,
+   async function (newMovie, { rejectWithValue }) {
+      try {
+         await createRequest({
+            method: axios.POST, url: axios.PATH_POST_MOVIE,
+            body: newMovie
+         })
+
+      } catch (error) {
+         return rejectWithValue(error.message);
+      }
+   }
+);
+
 const movieSlice = createSlice({
    name: MOVIES,
    initialState,
@@ -91,6 +107,19 @@ const movieSlice = createSlice({
       },
       [deleteMovie.rejected]: (state, { payload }) => {
          state.deleteLoading = false;
+         state.error = payload;
+      },
+      [createMovie.pending]: (state) => {
+         state.createLoading = true;
+         state.createSuccess = false;
+         state.error = null;
+      },
+      [createMovie.fulfilled]: (state) => {
+         state.createLoading = false;
+         state.createSuccess = true;
+      },
+      [createMovie.rejected]: (state, { payload }) => {
+         state.createLoading = false;
          state.error = payload;
       },
    }

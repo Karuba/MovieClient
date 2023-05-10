@@ -8,6 +8,7 @@ export const PATH_GET_MOVIES_WITH_PARAMS = ({ pageNumber, pageSize, movieName })
    `/api/movie?PageNumber=${pageNumber}&PageSize=${pageSize}&MovieName=${movieName ?? ""}`;
 export const PATH_DELETE_MOVIE = ({ id }) =>
    `/api/movie/${id}`;
+export const PATH_POST_MOVIE = `/api/movie`;
 
 //Auth
 export const PATH_USER_REGISTER = `/api/authentication/register`;

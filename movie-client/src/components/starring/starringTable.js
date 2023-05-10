@@ -1,23 +1,27 @@
 import { Space, Button, Popconfirm, Tag } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchStarring, setPageNumber, deleteStarring } from '../../redux/reducers/starringSlice';
-import { STARRING } from '../../redux/entitiesConst'
+import { MOVIES, STARRING } from '../../redux/entitiesConst'
 import { useEffect } from 'react';
 import Table from '../common/table/table'
 import { DeleteOutlined } from '@ant-design/icons'
 import CreateStarring from './actions/createStarring';
 import EditStarring from './actions/editStarring';
+import { fetchMovies } from '../../redux/reducers/movieSlice';
 /* import CreateMovie from './actions/createMovie'; */
 
 
 const StarringTable = () => {
    const { error, loading, [STARRING]: starring, success, totalStarring, pagination, deleteLoading } = useSelector(state => state[STARRING]);
+   const { pagination: moviePagination } = useSelector(state => state[MOVIES]);
 
    const dispatch = useDispatch();
 
-   const getStarring = () => {
+   const getMovies = () =>
+      dispatch(fetchMovies(moviePagination));
+
+   const getStarring = () =>
       dispatch(fetchStarring(pagination));
-   }
 
    const changePageNumber = (page) => {
       dispatch(setPageNumber(page));
@@ -34,6 +38,7 @@ const StarringTable = () => {
    const deleteHandler = async (record) => {
       await dispatch(deleteStarring({ id: record.id }));
       getStarring();
+      getMovies();
    }
 
    /* const enableHandler = async (record) => {
@@ -49,7 +54,7 @@ const StarringTable = () => {
    const actionRender = (_, record) =>
       <Space size={0}>
          <div style={{ width: "50px" }}>
-            <EditStarring record={record} />
+            <EditStarring record={record} getMovies={getMovies} />
          </div>
          <div style={{ width: "50px" }}>
             <Space size={0}>

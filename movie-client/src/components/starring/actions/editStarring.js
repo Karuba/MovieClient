@@ -11,7 +11,7 @@ import {
 } from '../../../redux/contracts/starringContracts';
 import { editStar, fetchStarring } from '../../../redux/reducers/starringSlice';
 
-const EditStarring = ({ record }) => {
+const EditStarring = ({ record, getMovies }) => {
 
    const [form] = Form.useForm();
    useEffect(() => {
@@ -38,6 +38,7 @@ const EditStarring = ({ record }) => {
       await dispatch(editStar(newStar));
       setOpen(false);
       dispatch(fetchStarring(pagination));
+      getMovies();
    };
    const handleCancel = () => {
       setOpen(false);

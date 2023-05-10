@@ -46,7 +46,7 @@ export const validateDescription =
       {
          max: 500,
          message: "Описание максимум длиной в 500 символов",
-      }, ,
+      },
       noWhiteSpace
    ]
 
