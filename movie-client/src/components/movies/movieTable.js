@@ -1,11 +1,12 @@
 import { Space, Button, Popconfirm, Tag } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchMovies, setPageNumber, deleteMovie } from '../../redux/reducers/movieSlice';
+import { fetchMovies, setPageNumber, deleteMovie } from '../../redux/reducers/moviesSlice';
 import { MOVIES } from '../../redux/entitiesConst'
 import { useEffect } from 'react';
 import Table from '../common/table/table'
 import { DeleteOutlined } from '@ant-design/icons'
 import CreateMovie from './actions/createMovie';
+import EditMovie from './actions/editMovie';
 
 
 const MovieTable = () => {
@@ -26,7 +27,8 @@ const MovieTable = () => {
    }, [pagination])
 
    const hiddenColumns = [
-      "id"
+      "id",
+      "poster"
    ]
 
    const deleteHandler = async (record) => {
@@ -46,10 +48,10 @@ const MovieTable = () => {
 
    const actionRender = (_, record) =>
       <Space size={0}>
-         <div style={{ width: "30px" }}>
-            {/* <EditTopic record={record} getTopics={getAllTopics} /> */}
+         <div style={{ width: "50px" }}>
+            <EditMovie record={record.name.props.entity} getMovies={getMovies} />
          </div>
-         <div style={{ width: "100px" }}>
+         <div style={{ width: "50px" }}>
             <Space size={0}>
                <Popconfirm
                   title="Are you sure?"

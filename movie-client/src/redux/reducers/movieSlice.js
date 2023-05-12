@@ -1,39 +1,28 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { createRequest } from '../../common/requestGenerator';
+import { createDownloadRequest, createRequest } from '../../common/requestGenerator';
 import * as axios from "../../lib/actionAxiosTypes";
-import { MOVIES } from "../entitiesConst"
+import { MOVIE } from "../entitiesConst"
 
 const initialState = {
-   [MOVIES]: [],
+   [MOVIE]: null,
    success: null,
    error: null,
    loading: null,
-   deleteLoading: null,
-   createLoading: null,
-   createSuccess: null,
-   totalMovies: null,
-   pagination: {
-      pageNumber: 1,
-      pageSize: 5,
-      movieName: "",
-   }
 }
 
-export const fetchMovies = createAsyncThunk(
-   `${MOVIES}/fetchMovies`,
-   async function (pagination, { rejectWithValue, dispatch }) {
+export const fetchMovie = createAsyncThunk(
+   `${MOVIE}/fetchMovie`,
+   async function ({ id }, { rejectWithValue, dispatch }) {
       try {
-
-         //console.log('query address: ' + axios.PATH_GET_MOVIES_WITH_PARAMS(pageParams));
          await createRequest({
-            method: axios.GET, url: axios.PATH_GET_MOVIES_WITH_PARAMS(pagination),
+            method: axios.GET, url: axios.PATH_GET_MOVIE({ id }),
             postCallback: (dataAfter) => {
                const { data } = dataAfter;
                return data;
             },
             redux_cfg: {
                dispatch,
-               actions: [setMovies, setTotalMovies]
+               actions: [setMovie]
             }
          })
 
@@ -43,26 +32,19 @@ export const fetchMovies = createAsyncThunk(
    }
 );
 
-export const deleteMovie = createAsyncThunk(
-   `${MOVIES}/deleteMovie`,
-   async ({ id }, { rejectWithValue }) => {
+export const posterDownload = createAsyncThunk(
+   `${MOVIE}/posterDownload`,
+   async function ({ posterName }, { rejectWithValue, dispatch }) {
       try {
-         await createRequest({
-            method: axios.DELETE, url: axios.PATH_DELETE_MOVIE({ id }),
-         })
-      } catch (error) {
-         return rejectWithValue(error.message)
-      }
-   }
-);
-
-export const createMovie = createAsyncThunk(
-   `${MOVIES}/createMovie`,
-   async function (newMovie, { rejectWithValue }) {
-      try {
-         await createRequest({
-            method: axios.POST, url: axios.PATH_POST_MOVIE,
-            body: newMovie
+         createDownloadRequest({
+            url: axios.PATH_EXTRACT_POSTER({ posterName }),
+            postCallback: (response => ({
+               poster: URL.createObjectURL(response.data),
+            })),
+            redux_cfg: {
+               dispatch,
+               actions: [setPoster]
+            }
          })
 
       } catch (error) {
@@ -72,60 +54,33 @@ export const createMovie = createAsyncThunk(
 );
 
 const movieSlice = createSlice({
-   name: MOVIES,
+   name: MOVIE,
    initialState,
    reducers: {
-      setMovies(state, { payload }) {
-         state[MOVIES] = payload.movies;
+      setMovie(state, { payload }) {
+         state[MOVIE] = payload;
       },
-      setTotalMovies(state, { payload }) {
-         state.totalMovies = payload.quantity;
-      },
-      setPageNumber(state, { payload }) {
-         state.pagination.pageNumber = payload;
+      setPoster(state, { payload }) {
+         state[MOVIE].poster = payload.poster;
       }
    },
    extraReducers: {
-      [fetchMovies.pending]: (state) => {
+      [fetchMovie.pending]: (state) => {
          state.loading = true;
          state.error = null;
       },
-      [fetchMovies.fulfilled]: (state) => {
+      [fetchMovie.fulfilled]: (state) => {
          state.loading = false;
          state.success = true;
       },
-      [fetchMovies.rejected]: (state, { payload }) => {
+      [fetchMovie.rejected]: (state, { payload }) => {
          state.loading = false;
-         state.error = payload;
-      },
-      [deleteMovie.pending]: (state) => {
-         state.deleteLoading = true;
-         state.error = null;
-      },
-      [deleteMovie.fulfilled]: (state) => {
-         state.deleteLoading = false;
-      },
-      [deleteMovie.rejected]: (state, { payload }) => {
-         state.deleteLoading = false;
-         state.error = payload;
-      },
-      [createMovie.pending]: (state) => {
-         state.createLoading = true;
-         state.createSuccess = false;
-         state.error = null;
-      },
-      [createMovie.fulfilled]: (state) => {
-         state.createLoading = false;
-         state.createSuccess = true;
-      },
-      [createMovie.rejected]: (state, { payload }) => {
-         state.createLoading = false;
          state.error = payload;
       },
    }
 });
 
 
-export const { setMovies, setTotalMovies, setPageNumber } = movieSlice.actions;
+export const { setMovie, setPoster } = movieSlice.actions;
 
 export default movieSlice.reducer;

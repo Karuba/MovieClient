@@ -7,8 +7,17 @@ export const PUT = 'put';
 export const PATH_GET_MOVIES_WITH_PARAMS = ({ pageNumber, pageSize, movieName }) =>
    `/api/movie?PageNumber=${pageNumber}&PageSize=${pageSize}&MovieName=${movieName ?? ""}`;
 export const PATH_DELETE_MOVIE = ({ id }) =>
-   `/api/movie/${id}`;
+   `/api/movie/${id ?? ""}`;
 export const PATH_POST_MOVIE = `/api/movie`;
+export const PATH_PUT_MOVIE = ({ id }) => `/api/movie/${id ?? ""}`;
+
+//Movies - poster
+export const PATH_EXTRACT_POSTER = ({ posterName }) =>
+   `/api/movie/poster/${posterName}`;
+
+//Movie
+export const PATH_GET_MOVIE = ({ id }) =>
+   `/api/movie/${id ?? ""}`;
 
 //Auth
 export const PATH_USER_REGISTER = `/api/authentication/register`;

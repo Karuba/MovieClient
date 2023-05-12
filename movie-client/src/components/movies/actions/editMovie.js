@@ -1,5 +1,5 @@
 import { Button, Modal, Form, Input, AutoComplete, Upload, Space, Tag, Select } from 'antd';
-import { FileAddOutlined, SaveOutlined, PlusOutlined } from '@ant-design/icons'
+import { SaveOutlined, EditOutlined } from '@ant-design/icons'
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { MOVIES, STARRING } from '../../../redux/entitiesConst';
@@ -11,10 +11,21 @@ import {
    validateDescription
 } from '../../../redux/contracts/movieContracts';
 import { fetchStarring } from '../../../redux/reducers/starringSlice';
-import { createMovie, fetchMovies } from '../../../redux/reducers/moviesSlice';
+import { editMovie, posterDownload } from '../../../redux/reducers/moviesSlice';
 import UploadPoster from './uploadPoster';
 
-const CreateMovie = () => {
+const EditMovie = ({ record, getMovies }) => {
+
+   const [form] = Form.useForm();
+   useEffect(() => {
+      form.setFieldsValue({
+         ...record,
+         starring: record.starrings.map(star => ({
+            label: star.firstName + " " + star.secondName,
+            value: star.id,
+         }))
+      });
+   }, [record]);
 
    const layout = {
       labelCol: {
@@ -25,36 +36,26 @@ const CreateMovie = () => {
       },
    };
 
-   /* const options = [];
-   for (let i = 10; i < 36; i++) {
-      options.push({
-         label: i.toString(36) + i,
-         value: i.toString(36) + i,
-      });
-   } */
    const handleChange = (value) => {
       console.log(`selected ${value}`);
    };
 
    const dispatch = useDispatch();
-   const { error, createLoading, pagination, createSuccess } = useSelector(state => state[MOVIES])
+   const { error, editLoading, editSuccess } = useSelector(state => state[MOVIES])
    const { [STARRING]: starring, loading, defaultPagination } = useSelector(state => state[STARRING])
 
    const [open, setOpen] = useState(false);
-   /* const [data, setData] = useState([]); */
    const [options, setOptions] = useState([]);
-   const [form] = Form.useForm();
    const [poster, setPoster] = useState(null);
 
-   /* const addData = () => {
-      const field = form.getFieldValue("starring")
-      const star = field.split(' ')
-      const add = starring.find(s => s.firstName === star[0] && s.secondName === star[1]);
-      if (add)
-         setData([...data, add]);
+   const getPoster = (id, image) => {
+      dispatch(posterDownload({ id, posterName: image }))
+   }
 
-      form.resetFields();
-   } */
+   useEffect(() => {
+      if (record.image)
+         getPoster(record.id, record.image);
+   }, [])
 
    const showModal = async () => {
       setOpen(true);
@@ -76,8 +77,14 @@ const CreateMovie = () => {
       const formData = new FormData();
       formData.append("poster", poster)
       formData.append("name", values.name);
-      formData.append("starring", JSON.stringify(values.starring?.map(star => ({ starringId: star })) ?? []))
+      formData.append("starring", JSON.stringify(values.starring?.map(star =>
+         typeof star === "object"
+            ? { starringId: star.value }
+            : { starringId: star }
+      ) ?? []));
+
       formData.append("description", values.description);
+      formData.append("image", record.image);
       console.log('formData: ', formData);
 
       const newMovie = {
@@ -91,35 +98,34 @@ const CreateMovie = () => {
 
 
       if (finish || !uploadFiles) {
-         await dispatch(createMovie(formData));
+         await dispatch(editMovie({ id: record.id, newMovie: formData }));
       }
    };
 
    useEffect(() => {
-      if (createSuccess) {
+      if (editSuccess) {
          setOpen(false);
-         dispatch(fetchMovies(pagination));
+         getMovies();
          form.resetFields();
       }
-   }, [createSuccess])
+   }, [editSuccess])
 
    const handleCancel = () => {
       setOpen(false);
    };
 
-   const [fileList, setFileList] = useState([]);
    const [finish, setFinish] = useState(false);
 
    return (
       <>
-         <Button onClick={showModal}>
-            <FileAddOutlined /> create a new movie
+         <Button type='link' onClick={showModal}>
+            <EditOutlined />
          </Button>
          <Modal
             title="Create a movie"
             open={open}
             onOk={handleSubmit}
-            confirmLoading={createLoading}
+            confirmLoading={editLoading}
             onCancel={handleCancel}
             footer={
                <>
@@ -144,18 +150,7 @@ const CreateMovie = () => {
                   }}
                   rules={uploadImgValidator(setFinish)}
                >
-                  <UploadPoster setPoster={setPoster} />
-                  {/* <Upload
-                     maxCount={uploadCharacters.maxCount}
-                     customRequest={(info) => {
-                        setFileList([info.file]);
-                     }}
-                     showUploadList={false}
-                     accept={uploadCharacters.accept}
-                  >
-                     <Button>Upload</Button>
-                     {fileList[0]?.name}
-                  </Upload> */}
+                  <UploadPoster setPoster={setPoster} previousPoster={record.poster} />
                </Form.Item>
                <Form.Item name="name" label="Name"
                   rules={movieNameValidation}
@@ -171,49 +166,25 @@ const CreateMovie = () => {
                   />
                </Form.Item>
 
-               <Form.Item name="starring" label="Starring"
-               /* rules={[
-                  {
-                     validator(_, value) {
-                        return new Promise((resolve, reject) => {
-                           starring.find((star) => star.firstName + " " + star.secondName === value) ?
-                              resolve("Success!") :
-                              reject("The star is not correct");
-                        })
-                     }
-                  }
-               ]} */
-               >
-                  {/* <AutoComplete
-                     options={starring.map((star) => ({ value: star.firstName + " " + star.secondName }))}
-                     placeholder="Please enter the topic"
-                     filterOption={(inputValue, option) =>
-                        option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
-                     }
-                  /> */}
+               <Form.Item name="starring" label="Starring" >
                   <Select
                      mode="multiple"
                      allowClear
                      placeholder="Please select"
                      onChange={handleChange}
                      options={options}
+                  /* defaultValue={record.starrings.map(star => ({
+                     label: star.firstName + " " + star.secondName,
+                     value: star.id,
+                  }))} */
                   />
                </Form.Item>
-               {/* <div style={{ display: "flex", justifyContent: "right", justifyContent: "space-between", marginBottom: 20 }}>
-                  <div style={{ display: "flex" }}>
-                     {data?.map(starring => <Tag color={"volcano"} key={starring.firstName + starring.secondName}>{starring.firstName + " " + starring.secondName}</Tag>)}
-                  </div>
-                  <Button type="link" onClick={addData} ><PlusOutlined /></Button>
-               </div> */}
-
-
-
                <Form.Item style={{ display: "flex", justifyContent: "right" }}>
-                  <Button htmlType='submit' loading={createLoading || loading}><SaveOutlined /> Save movie</Button>
+                  <Button htmlType='submit' loading={editLoading || loading}><SaveOutlined /> Save movie</Button>
                </Form.Item>
             </Form>
          </Modal>
       </>
    );
 };
-export default CreateMovie;
+export default EditMovie;

@@ -2,6 +2,7 @@
 export const MOVIES = "movies";
 export const AUTH = "auth";
 export const STARRING = "starring"
+export const MOVIE = "movie";
 
 //Roles
 export const ANONYM = "Anonym";

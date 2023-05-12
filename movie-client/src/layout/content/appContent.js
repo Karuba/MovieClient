@@ -2,6 +2,7 @@ import React from 'react';
 import { Outlet } from 'react-router-dom'
 import { Layout } from 'antd';
 import { DARK_COLOR } from '../../common/designConst'
+import "./appContent.css";
 
 const AppContent = () => {
 
@@ -9,15 +10,11 @@ const AppContent = () => {
 
    return (
       <Content
-         style={{
-            backgroundColor: DARK_COLOR
-         }}
+         className='body-layout'
       >
          <Layout
             style={{
-               padding: '24px 50px',
-               backgroundColor: DARK_COLOR,
-               minHeight: "80vh",
+               backgroundColor: "rgb(186, 175, 175, 0)",
                justifyContent: "center",
                alignItems: "center",
             }}

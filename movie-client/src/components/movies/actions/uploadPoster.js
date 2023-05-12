@@ -23,9 +23,9 @@ const beforeUpload = (file) => {
    return isJpgOrPng && isLt2M;
 };
 
-const UploadPoster = ({ setPoster }) => {
+const UploadPoster = ({ setPoster, previousPoster }) => {
    const [loading, setLoading] = useState(false);
-   const [imageUrl, setImageUrl] = useState();
+   const [imageUrl, setImageUrl] = useState(previousPoster);
    const handleChange = (info) => {
       if (info.file.status === 'uploading') {
          setLoading(true);

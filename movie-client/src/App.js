@@ -7,6 +7,7 @@ import RegisterPage from './pages/registerPage';
 import UserProfile from './pages/userProfile';
 import NotFoundPage from './pages/notFoundPage'
 import AdminPage from './pages/adminPage'
+import MoviePage from './pages/moviePage';
 
 
 const router = createBrowserRouter(createRoutesFromElements(
@@ -16,6 +17,7 @@ const router = createBrowserRouter(createRoutesFromElements(
     <Route path='/register' element={<RegisterPage />} />
     <Route path='/profile' element={<UserProfile />} />
     <Route path='/admin' element={<AdminPage />} />
+    <Route path='/movie/:id' element={<MoviePage />} />
     <Route path='*' element={<NotFoundPage />} />
   </Route>
 ));

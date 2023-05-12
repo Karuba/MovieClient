@@ -1,7 +1,94 @@
-.movie-tile{
-   display:block;
-   min-height: 100px;
-   min-width: 100px;
-   padding: 5px;
-   margin: 5px;
+@import url('https://fonts.googleapis.com/css?family=PT+Sans');
+
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+font-family: 'PT Sans', sans-serif;
+}
+
+/* body{
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   min-height: 100vh;
+} */
+
+.movie-card{
+   position: relative;
+   width: 220px;
+   height: 320px;
+   background: #fff;
+   border-radius: 20px;
+   overflow: hidden;
+   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+}
+
+.movie-card .movie-poster {
+   position: relative;
+   overflow: hidden;
+}
+
+.movie-card .movie-poster::before {
+   content: '';
+   position: absolute;
+   bottom: -170px;
+   width: 100%;
+   height: 100%;
+   background: linear-gradient(0deg, #baafaf, 92%, transparent);
+   transition: 0.5s;
+   z-index: 1;
+}
+
+.movie-card:hover .movie-poster::before {
+   bottom: -100px;
+}
+
+/* export const NIGHT_COLOR = "#706767";
+export const DARK_COLOR = "#baafaf";
+export const LIGHT_COLOR = "#ede8e8"; */
+
+.movie-card .movie-poster img {
+   width: 100%;
+   transition: 0.5s;
+}
+
+.movie-card:hover .movie-poster img {
+   transform: translateY(-50px);
+   filter: blur(5px);
+}
+
+.movie-card .movie-details {
+   display: block;
+   position: absolute;
+   width: 100%;
+   left: 0;
+   padding: 20px;
+   top: 190px;
+   z-index: 2;
+   transition: 0.5s;
+   margin-bottom: 20px;
+}
+
+.movie-card:hover .movie-details {
+   top: 100px;
+}
+
+.movie-card .movie-details .movie-title {
+   min-width: 180px;
+   font-size: 30px;
+}
+
+.movie-card .movie-details .movie-rating {
+   position: relative;
+   height: 35px;
+}
+
+.movie-card .movie-details .movie-starring-tags{
+   position: relative;
+   min-height: 30px;
+}
+
+.movie-card .movie-details .movie-info {
+   margin-top: 10px;
 }

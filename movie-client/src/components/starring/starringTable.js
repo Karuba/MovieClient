@@ -7,7 +7,7 @@ import Table from '../common/table/table'
 import { DeleteOutlined } from '@ant-design/icons'
 import CreateStarring from './actions/createStarring';
 import EditStarring from './actions/editStarring';
-import { fetchMovies } from '../../redux/reducers/movieSlice';
+import { fetchMovies } from '../../redux/reducers/moviesSlice';
 /* import CreateMovie from './actions/createMovie'; */
 
 
