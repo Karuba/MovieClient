@@ -6,19 +6,7 @@ import { Space, Spin } from 'antd';
 import Tile from './components/tile';
 
 
-const Movies = () => {
-
-   const dispatch = useDispatch();
-   const { error, loading, success, [MOVIES]: movies, pagination } = useSelector(state => state[MOVIES])
-
-   const getMovies = () => {
-      dispatch(fetchMovies(pagination))
-   }
-
-   useEffect(() => {
-      if (!movies)
-         getMovies();
-   })
+const Movies = ({ error, loading, success, movies, getPoster }) => {
 
    return (
       <Space style={{ justifyContent: "space-around", alignItems: "center", height: "100%", width: "100%" }}>
@@ -29,7 +17,7 @@ const Movies = () => {
             success ?
                <>
                   {movies?.map(movie =>
-                     <Tile key={movie.id} content={movie} />
+                     <Tile key={movie.id} content={movie} getPoster={getPoster} />
                   )}
                </>
                :

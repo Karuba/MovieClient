@@ -1,12 +1,13 @@
 import { Space, Button, Popconfirm, Tag } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchMovies, setPageNumber, deleteMovie } from '../../redux/reducers/moviesSlice';
-import { MOVIES } from '../../redux/entitiesConst'
+import { MOVIE, MOVIES } from '../../redux/entitiesConst'
 import { useEffect } from 'react';
 import Table from '../common/table/table'
 import { DeleteOutlined } from '@ant-design/icons'
 import CreateMovie from './actions/createMovie';
 import EditMovie from './actions/editMovie';
+import SearchMovie from './actions/searchMovie';
 
 
 const MovieTable = () => {
@@ -86,6 +87,9 @@ const MovieTable = () => {
          <div style={{ marginBottom: 10 }}>
             <CreateMovie />
          </div>
+         <div style={{ marginBottom: 10 }}>
+            <SearchMovie />
+         </div>
          {success &&
             <Table
                style={{
@@ -95,7 +99,7 @@ const MovieTable = () => {
                totalEntities={totalMovies}
                hiddenColumns={hiddenColumns}
                loading={loading}
-               nameRefColumn={true}
+               nameRefColumn={[MOVIE]}
                arrayRender={arrayRender}
                changePageNumber={changePageNumber}
                actionRender={actionRender}

@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { createRequest } from '../../common/requestGenerator';
 import * as axios from "../../lib/actionAxiosTypes";
-import * as entities from "../entitiesConst"
+import { AUTH } from "../entitiesConst"
 
 const userToken = localStorage.getItem('userToken')
    ? localStorage.getItem('userToken')
@@ -36,11 +36,9 @@ const initialState = {
 
 
 export const registerUser = createAsyncThunk(
-   `${entities.AUTH}/registerUser`,
+   `${AUTH}/registerUser`,
    async ({ userName, password }, { rejectWithValue }) => {
       try {
-         console.log('data: ' + userName, password);
-
          await createRequest({
             method: axios.POST, url: axios.PATH_USER_REGISTER,
             body: {
@@ -60,11 +58,9 @@ export const registerUser = createAsyncThunk(
 )
 
 export const userLogin = createAsyncThunk(
-   `${entities.AUTH}/userLogin`,
+   `${AUTH}/userLogin`,
    async ({ userName, password }, { rejectWithValue, dispatch }) => {
       try {
-         console.log('data: ' + userName, password);
-
          await createRequest({
             method: axios.POST, url: axios.PATH_USER_LOGIN,
             body: {
@@ -91,7 +87,7 @@ export const userLogin = createAsyncThunk(
 )
 
 export const userLogout = createAsyncThunk(
-   `${entities.AUTH}/userLogout`,
+   `${AUTH}/userLogout`,
    async (_, { rejectWithValue, dispatch }) => {
       try {
 
@@ -187,7 +183,7 @@ export const userLogout = createAsyncThunk(
  */
 
 const authSlice = createSlice({
-   name: entities.AUTH,
+   name: AUTH,
    initialState,
    reducers: {
       setUserInfo(state, { payload }) {

@@ -18,6 +18,7 @@ const initialState = {
       pageNumber: 1,
       pageSize: 5,
       movieName: "",
+      newMovies: false,
    }
 }
 
@@ -123,6 +124,13 @@ const moviesSlice = createSlice({
       setPageNumber(state, { payload }) {
          state.pagination.pageNumber = payload;
       },
+      setSearchMovieName(state, { payload }) {
+         state.pagination = {
+            ...state.pagination,
+            pageNumber: 1,
+            movieName: payload,
+         }
+      },
       setPoster(state, { payload }) {
          const index = state[MOVIES].findIndex(m => m.id === payload.id);
 
@@ -130,7 +138,7 @@ const moviesSlice = createSlice({
             state[MOVIES][index].poster = payload.poster;
 
 
-      }
+      },
    },
    extraReducers: {
       [fetchMovies.pending]: (state) => {
@@ -186,6 +194,6 @@ const moviesSlice = createSlice({
 });
 
 
-export const { setMovies, setTotalMovies, setPageNumber, setPoster } = moviesSlice.actions;
+export const { setMovies, setTotalMovies, setPageNumber, setPoster, setSearchMovieName } = moviesSlice.actions;
 
 export default moviesSlice.reducer;

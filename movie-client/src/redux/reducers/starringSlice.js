@@ -6,8 +6,7 @@ import { STARRING } from "../entitiesConst"
 const defaultPagination = {
    pageNumber: 1,
    pageSize: 5,
-   firstName: "",
-   secondName: "",
+   name: "",
 }
 
 const initialState = {
@@ -110,7 +109,14 @@ const starringSlice = createSlice({
       },
       setPageNumber(state, { payload }) {
          state.pagination.pageNumber = payload;
-      }
+      },
+      setSearchStarringName(state, { payload }) {
+         state.pagination = {
+            ...state.pagination,
+            pageNumber: 1,
+            name: payload,
+         }
+      },
    },
    extraReducers: {
       [fetchStarring.pending]: (state) => {
@@ -162,6 +168,6 @@ const starringSlice = createSlice({
 });
 
 
-export const { setStarring, setTotalStarring, setPageNumber } = starringSlice.actions;
+export const { setStarring, setTotalStarring, setPageNumber, setSearchStarringName } = starringSlice.actions;
 
 export default starringSlice.reducer;

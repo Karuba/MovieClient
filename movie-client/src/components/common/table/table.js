@@ -28,7 +28,7 @@ const EntitiesTable = ({
       ({
          key: entity.id,
          ...entity,
-         name: <Link to={`/book/${entity.id}`} entity={entity} style={{ color: "black" }}> {entity.name}</Link >
+         name: <Link to={`/${nameRefColumn}/${entity.id}`} entity={entity} style={{ color: "black" }}> {entity.name}</Link >
       })
       :
       ({

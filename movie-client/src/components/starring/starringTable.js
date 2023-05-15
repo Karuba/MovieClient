@@ -8,6 +8,7 @@ import { DeleteOutlined } from '@ant-design/icons'
 import CreateStarring from './actions/createStarring';
 import EditStarring from './actions/editStarring';
 import { fetchMovies } from '../../redux/reducers/moviesSlice';
+import SearchStarring from './actions/searchStarring';
 /* import CreateMovie from './actions/createMovie'; */
 
 
@@ -78,10 +79,14 @@ const StarringTable = () => {
          <div style={{ marginBottom: 10 }}>
             <CreateStarring />
          </div>
+         <div style={{ marginBottom: 10 }}>
+            <SearchStarring />
+         </div>
          {success &&
             <Table
                style={{
-                  width: 1000
+                  width: 1000,
+                  marginBottom: 24,
                }}
                entities={starring}
                totalEntities={totalStarring}
