@@ -58,9 +58,9 @@ const HomePage = () => {
   }
 
   useEffect(() => {
-    if (!movies)
-      getMovies();
-  })
+
+    getMovies();
+  }, [movies?.length])
 
   const getPoster = (id, image) => {
     dispatch(posterDownload({ id, posterName: image }))
@@ -74,7 +74,7 @@ const HomePage = () => {
   useEffect(() => {
     if (!newMovies)
       getNewMovies();
-  })
+  }, [newMovies?.length])
 
   const getNewMoviePoster = (id, image) => {
     dispatch(newMoviePosterDownload({ id, posterName: image }))
@@ -100,9 +100,8 @@ const HomePage = () => {
   }
 
   useEffect(() => {
-    if (userInfo?.userName)
-      getBestMovies();
-  }, [userInfo])
+    getBestMovies();
+  }, [bestMovies?.length])
 
   const getBestMoviePoster = (id, image) => {
     dispatch(bestMoviePosterDownload({ id, posterName: image }))
@@ -142,14 +141,14 @@ const HomePage = () => {
         display: "flex",
         alignItems: "center",
         justifyContent: "start",
-        marginBottom: 50,
+        margin: "50px 0px",
       }}>
         <div style={{
           fontSize: 50,
           backgroundColor: "rgb(186, 175, 175, 0.6)",
           borderRadius: 24,
           height: 85,
-          width: 300,
+          width: 400,
           textAlign: "center",
         }}>
           <span style={{
@@ -165,21 +164,21 @@ const HomePage = () => {
         display: "flex",
         alignItems: "center",
         justifyContent: "start",
-        marginBottom: 50,
+        margin: "50px 0px",
       }}>
         <div style={{
           fontSize: 50,
           backgroundColor: "rgb(186, 175, 175, 0.6)",
           borderRadius: 24,
           height: 85,
-          width: 300,
+          width: 800,
           textAlign: "center",
         }}>
           <span style={{
             display: "inline-block",
             verticalAlign: "middle",
             lineHeight: "normal",
-          }}>Your Recommendation Movies Store:</span>
+          }}>Your Movie Recommendation Store:</span>
         </div>
       </div>
       <Movies {...{ error: recError, loading: recLoading, success: recSuccess, movies: recMovies, getPoster: getRecMoviePoster }} />
@@ -188,14 +187,14 @@ const HomePage = () => {
         display: "flex",
         alignItems: "center",
         justifyContent: "start",
-        marginBottom: 50,
+        margin: "50px 0px",
       }}>
         <div style={{
           fontSize: 50,
           backgroundColor: "rgb(186, 175, 175, 0.6)",
           borderRadius: 24,
           height: 85,
-          width: 300,
+          width: 450,
           textAlign: "center",
         }}>
           <span style={{

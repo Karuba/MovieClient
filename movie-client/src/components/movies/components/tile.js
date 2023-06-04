@@ -1,10 +1,11 @@
 import { useEffect } from "react";
 import './tile.css'
-import { NIGHT_COLOR } from '../../../common/designConst'
-import { Rate, Tag } from 'antd'
+import { DARK_COLOR, NIGHT_COLOR } from '../../../common/designConst'
+import { Avatar, Rate, Tag } from 'antd'
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { posterDownload } from "../../../redux/reducers/moviesSlice";
+import { UserOutlined } from '@ant-design/icons';
 
 const Tile = ({ content, getPoster }) => {
 
@@ -25,7 +26,7 @@ const Tile = ({ content, getPoster }) => {
 
    return (
       <>
-         <span style={{ fontSize: 17 }}>{score && score * 100 / 5 + `% chance you like it (${score})`}</span>
+         <span style={{ fontSize: 17 }}>{score && (score * 100 / 5).toString().slice(0, 5) + `% chance you like it (${score})`}</span>
          <Link to={`/movie/${id}`}>
             <div className="movie-card" /* style={{ backgroundColor: NIGHT_COLOR, height: 300, width: 200 }} */>
                <div className="movie-poster">
@@ -41,11 +42,9 @@ const Tile = ({ content, getPoster }) => {
                   <div className="movie-starring-tags">
                      {starrings?.map((starring) => {
                         return (
-                           <Tag color="#f50" key={starring.firstName + starring.secondName} style={{ margin: 1 }}>
-                              {starring.firstName + " " + starring.secondName}
-                           </Tag>
+                           <Avatar key={starring.firstName + starring.secondName} icon={<UserOutlined />} style={{ backgroundColor: NIGHT_COLOR, marginRight: 5 }} />
                         );
-                     })}
+                     }).slice(0, 5)}
                   </div>
                   <div className="movie-info">
                      <p style={{ color: NIGHT_COLOR }}>

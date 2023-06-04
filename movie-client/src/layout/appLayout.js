@@ -10,6 +10,7 @@ import { UserMenu } from './content/userMenu'
 import { DARK_COLOR, LIGHT_COLOR, NIGHT_COLOR } from '../common/designConst';
 import logo1 from '../assets/camera.svg'
 import logo2 from '../assets/Premium Cinema.svg'
+import SearchBar from '../components/common/search/searchBar';
 const { Header, Footer } = Layout;
 
 const AppLayout = () => {
@@ -34,7 +35,8 @@ const AppLayout = () => {
                         <img src={logo2} style={{ height: 40 }} alt='logo' />
                      </Link>
                   </div>
-                  <div>
+                  <div style={{ width: "75%", paddingLeft: 30 }}>
+                     <SearchBar />
                   </div>
                   {/* <Menu
                      style={{

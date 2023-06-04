@@ -18,8 +18,10 @@ const AdminPage = () => {
 
    return (
       <>
-         <MovieTable />
-         <StarringTable />
+         <div style={{ height: 1300 }}>
+            <MovieTable />
+            <StarringTable />
+         </div>
       </>
    )
 }

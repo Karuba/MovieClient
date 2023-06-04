@@ -5,6 +5,7 @@ import { MOVIES } from "../entitiesConst"
 
 const initialState = {
    [MOVIES]: null,
+   searchMovies: null,
    success: null,
    error: null,
    loading: null,
@@ -18,6 +19,11 @@ const initialState = {
       pageNumber: 1,
       pageSize: 5,
       movieName: "",
+      newMovies: false,
+   },
+   searchPagination: {
+      pageNumber: 1,
+      pageSize: 10,
       newMovies: false,
    }
 }
@@ -111,6 +117,34 @@ export const posterDownload = createAsyncThunk(
    }
 );
 
+export const fetchSearchMovies = createAsyncThunk(
+   `${MOVIES}/fetchSearchMovies`,
+   async function ({ searchPagination, movieName }, { rejectWithValue, dispatch }) {
+      try {
+
+         const searchParams = {
+            ...searchPagination,
+            movieName,
+         }
+
+         await createRequest({
+            method: axios.GET, url: axios.PATH_GET_MOVIES_WITH_PARAMS(searchParams),
+            postCallback: (dataAfter) => {
+               const { data } = dataAfter;
+               return data;
+            },
+            redux_cfg: {
+               dispatch,
+               actions: [setSearchMovies]
+            }
+         })
+
+      } catch (error) {
+         return rejectWithValue(error.message)
+      }
+   }
+);
+
 const moviesSlice = createSlice({
    name: MOVIES,
    initialState,
@@ -133,11 +167,11 @@ const moviesSlice = createSlice({
       },
       setPoster(state, { payload }) {
          const index = state[MOVIES].findIndex(m => m.id === payload.id);
-
          if (index || index === 0)
             state[MOVIES][index].poster = payload.poster;
-
-
+      },
+      setSearchMovies(state, { payload }) {
+         state.searchMovies = payload.movies;
       },
    },
    extraReducers: {
@@ -194,6 +228,6 @@ const moviesSlice = createSlice({
 });
 
 
-export const { setMovies, setTotalMovies, setPageNumber, setPoster, setSearchMovieName } = moviesSlice.actions;
+export const { setMovies, setTotalMovies, setPageNumber, setPoster, setSearchMovieName, setSearchMovies } = moviesSlice.actions;
 
 export default moviesSlice.reducer;

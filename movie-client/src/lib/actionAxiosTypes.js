@@ -6,6 +6,8 @@ export const PUT = 'put';
 //Movies
 export const PATH_GET_MOVIES_WITH_PARAMS = ({ pageNumber, pageSize, movieName, newMovies }) =>
    `/api/movie?PageNumber=${pageNumber}&PageSize=${pageSize}&MovieName=${movieName ?? ""}&NewMovies=${newMovies ?? ""}`;
+export const PATH_GET_USER_MOVIES_WITH_PARAMS = ({ pageNumber, pageSize, movieName, newMovies, userName }) =>
+   `/api/movie/user/${userName}?PageNumber=${pageNumber}&PageSize=${pageSize}&MovieName=${movieName ?? ""}&NewMovies=${newMovies ?? ""}`;
 export const PATH_DELETE_MOVIE = ({ id }) =>
    `/api/movie/${id ?? ""}`;
 export const PATH_POST_MOVIE = `/api/movie`;

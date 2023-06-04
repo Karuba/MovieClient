@@ -38,7 +38,12 @@ const MoviePage = () => {
          setRateValue(movie?.rating);
          movie?.id !== id && getMovie(id);
       }
-   }, [movie]);
+   }, [movie, id]);
+
+   useEffect(() => {
+      console.log('movieId: ', id);
+
+   }, [id]);
 
    const navigate = useNavigate()
 

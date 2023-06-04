@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { createRequest } from '../../common/requestGenerator';
+import { createDownloadRequest, createRequest } from '../../common/requestGenerator';
 import * as axios from "../../lib/actionAxiosTypes";
 import { AUTH } from "../entitiesConst"
 
@@ -31,6 +31,17 @@ const initialState = {
    userInfo,
    userToken,
    avatar: null,
+   userMovies: null,
+   totalUserMovies: null,
+   movieLoading: null,
+   movieError: null,
+   movieSuccess: null,
+   pagination: {
+      pageNumber: 1,
+      pageSize: 5,
+      movieName: "",
+      newMovies: false,
+   },
 }
 
 
@@ -103,6 +114,51 @@ export const userLogout = createAsyncThunk(
       }
    }
 )
+
+export const fetchUserMovies = createAsyncThunk(
+   `${AUTH}/fetchUserMovies`,
+   async function ({ pagination, userName }, { rejectWithValue, dispatch }) {
+      try {
+
+         await createRequest({
+            method: axios.GET, url: axios.PATH_GET_USER_MOVIES_WITH_PARAMS({ ...pagination, userName }),
+            postCallback: (dataAfter) => {
+               const { data } = dataAfter;
+               return data;
+            },
+            redux_cfg: {
+               dispatch,
+               actions: [setUserMovies, setTotalUserMovies]
+            }
+         })
+
+      } catch (error) {
+         return rejectWithValue(error.message)
+      }
+   }
+);
+
+export const posterDownload = createAsyncThunk(
+   `${AUTH}/posterDownload`,
+   async function ({ id, posterName }, { rejectWithValue, dispatch }) {
+      try {
+         createDownloadRequest({
+            url: axios.PATH_EXTRACT_POSTER({ posterName }),
+            postCallback: (response => ({
+               id: id,
+               poster: URL.createObjectURL(response.data),
+            })),
+            redux_cfg: {
+               dispatch,
+               actions: [setPoster]
+            }
+         })
+
+      } catch (error) {
+         return rejectWithValue(error.message);
+      }
+   }
+);
 
 /* export const avatarDownload = createAsyncThunk(
    `${entities.AUTH}/avatarDownload`,
@@ -205,7 +261,18 @@ const authSlice = createSlice({
       },
       setAvatar(state, { payload }) {
          state.avatar = payload.avatar;
-      }
+      },
+      setUserMovies(state, { payload }) {
+         state.userMovies = payload.movies.map(m => ({ ...m, poster: null }));;
+      },
+      setTotalUserMovies(state, { payload }) {
+         state.totalMovies = payload.quantity;
+      },
+      setPoster(state, { payload }) {
+         const index = state.userMovies.findIndex(m => m.id === payload.id);
+         if (index || index === 0)
+            state.userMovies[index].poster = payload.poster;
+      },
    },
    extraReducers: {
       // login user
@@ -238,9 +305,21 @@ const authSlice = createSlice({
          state.loading = false
          state.error = payload
       },
+      [fetchUserMovies.pending]: (state) => {
+         state.movieLoading = true;
+         state.movieError = null;
+      },
+      [fetchUserMovies.fulfilled]: (state) => {
+         state.movieLoading = false;
+         state.movieSuccess = true;
+      },
+      [fetchUserMovies.rejected]: (state, { payload }) => {
+         state.movieLoading = false;
+         state.movieError = payload;
+      },
    },
 })
 
-export const { setUserInfo, setUserToken, removeUserInfo, removeUserToken, setSuccess, setAvatar } = authSlice.actions;
+export const { setUserInfo, setUserToken, removeUserInfo, removeUserToken, setSuccess, setAvatar, setUserMovies, setTotalUserMovies, setPoster } = authSlice.actions;
 
 export default authSlice.reducer
